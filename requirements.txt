@@ -14,13 +14,13 @@ motor==3.3.2
 
 pinecone==6.0.0
 
-sentence-transformers>=3.0.0
-transformers>=4.50.0
-torch>=2.9.0
+Pillow>=11.2.1
+sentence-transformers>=5.0.0
+transformers>=4.56.0
+torch>=2.12.0
 
 pypdf==3.17.4
 pdfplumber==0.10.3
-Pillow==10.1.0
 
 numpy>=1.26.4
 
