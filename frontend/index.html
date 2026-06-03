@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>MediTrack+ | AI Healthcare Assistant</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+
+  <!-- Mobile menu trigger -->
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">☰</button>
+
+  <!-- Ambient background shapes -->
+  <div class="bg-circle-1" aria-hidden="true"></div>
+  <div class="bg-circle-2" aria-hidden="true"></div>
+
+  <!-- AUTH SCREEN -->
+  <div id="auth-container" class="auth-container active" role="main">
+    <div class="auth-card">
+      <div class="auth-header">
+        <span class="floating-icon" aria-hidden="true">🩺</span>
+        <h1><span class="gradient-text">MediTrack+</span></h1>
+        <p class="auth-subtitle">Your AI-powered prescription assistant</p>
+        <div class="hero-badge">✅ Trusted by 10,000+ Healthcare Users</div>
+      </div>
+
+      <div class="auth-tabs" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchAuthTab('login')">Sign In</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchAuthTab('register')">Create Account</button>
+      </div>
+
+      <!-- Login -->
+      <div id="login-form" class="auth-form active" role="tabpanel">
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" id="login-username" class="auth-input" placeholder="Username" autocomplete="username" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="login-password" class="auth-input" placeholder="Password" autocomplete="current-password" />
+        </div>
+        <button onclick="handleLogin()" class="auth-btn">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+
+      <!-- Register -->
+      <div id="register-form" class="auth-form" role="tabpanel">
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" id="reg-username" class="auth-input" placeholder="Choose a username" autocomplete="username" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="reg-password" class="auth-input" placeholder="Create a password (min 6 chars)" autocomplete="new-password" />
+        </div>
+        <button onclick="handleRegister()" class="auth-btn">
+          <span class="btn-text">Create Account</span>
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+
+      <footer class="auth-footer">
+        <div class="auth-trust-row">
+          <span>✨ AI-Powered</span>
+          <span class="divider">·</span>
+          <span>🔒 Secure</span>
+          <span class="divider">·</span>
+          <span>📊 Private</span>
+        </div>
+        <p>MediTrack+ helps you understand prescriptions. Always consult a doctor for medical advice.</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="app-container" class="app-container">
+    <aside class="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-icon" aria-hidden="true">🩺</div>
+          <div class="logo-meta">
+            <span class="logo-text">MediTrack+</span>
+            <span class="user-name" id="current-user">Loading…</span>
+          </div>
+        </div>
+        <button onclick="handleLogout()" class="logout-btn" aria-label="Logout">
+          <span>↩</span> Logout
+        </button>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main navigation">
+        <button class="nav-item active" onclick="switchPage('home')" data-page="home">
+          <span aria-hidden="true">🏠</span>
+          <span>Home</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('otc')" data-page="otc">
+          <span aria-hidden="true">💊</span>
+          <span>OTC List</span>
+        </button>
+      </nav>
+
+      <!-- Upload Section -->
+      <section class="upload-section" id="home-upload-section">
+        <p class="section-label">Upload Prescription</p>
+        <div class="file-upload-area" id="file-upload-area" role="button" tabindex="0" onclick="document.getElementById('file-input').click()">
+          <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg" style="display:none" />
+          <div class="upload-placeholder">
+            <span class="upload-icon" aria-hidden="true">📄</span>
+            <span>Click or drag to upload</span>
+            <small>PDF, PNG or JPG</small>
+          </div>
+        </div>
+        <div id="upload-status" role="status" aria-live="polite"></div>
+      </section>
+
+      <!-- Voice Call Request Button in Sidebar -->
+      <section class="voice-call-sidebar-section">
+        <button id="voice-call-sidebar-btn" class="voice-call-sidebar-btn" onclick="openVoiceCallModal()">
+          <span aria-hidden="true">📞</span>
+          <span>Request Call Back</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+
+      <!-- Chat history -->
+      <section class="chat-history-section" aria-label="Your prescriptions">
+        <p class="section-label">Your Chats</p>
+        <div id="chat-history-list" class="chat-list" role="list"></div>
+      </section>
+    </aside>
+
+    <main class="main-content">
+      <!-- Home Page -->
+      <div id="home-page" class="page active">
+        <section id="welcome-screen" class="welcome-screen">
+          <div class="hero-badge">✅ Trusted by 10,000+ Healthcare Users</div>
+          <h1>Your Personal <span class="gradient-text">AI</span><br><span class="hero-highlight">Healthcare</span> Assistant</h1>
+          <p>Upload a prescription to get AI-powered insights — medication schedules, OTC checks, and intelligent Q&amp;A, all in one secure platform.</p>
+          <div class="stats-container">
+            <div class="stat"><div class="stat-value">99.9%</div><div class="stat-label">Accuracy</div></div>
+            <div class="stat"><div class="stat-value">24/7</div><div class="stat-label">AI Support</div></div>
+            <div class="stat"><div class="stat-value">100%</div><div class="stat-label">Data Privacy</div></div>
+          </div>
+          <div class="welcome-cta"><span class="cta-arrow" aria-hidden="true">←</span> Upload a prescription from the sidebar to get started</div>
+        </section>
+
+        <section id="chat-interface" class="chat-interface" style="display:none">
+          <header class="chat-header">
+            <div class="chat-title">
+              <div class="chat-icon" aria-hidden="true">💊</div>
+              <div><h2 id="chat-title-text">Chat</h2><p class="chat-subtitle">Ask anything about this prescription</p></div>
+            </div>
+          </header>
+          <div id="medicine-details" class="medicine-details" style="display:none">
+            <button class="expandable-header" onclick="toggleMedicineDetails()" aria-expanded="false">
+              <span><span aria-hidden="true">💊</span> Medicine Details</span>
+              <span class="expand-icon" aria-hidden="true">▼</span>
+            </button>
+            <div id="medicine-details-content" class="expandable-content" role="region"></div>
+          </div>
+          <div class="otc-check-section">
+            <label class="checkbox-label" for="otc-checkbox"><input type="checkbox" id="otc-checkbox" onchange="handleOTCCheck()" /><span>Check for OTC Medicines</span></label>
+            <div id="otc-results" class="otc-results" style="display:none" role="region" aria-live="polite"></div>
+          </div>
+          <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"></div>
+          <div class="chat-input-container">
+            <input type="text" id="chat-input" class="chat-input-field" placeholder="Ask about your prescription…" autocomplete="off" />
+            <button onclick="sendMessage()" class="send-btn"><span>Send</span><span aria-hidden="true">↗</span></button>
+          </div>
+        </section>
+      </div>
+
+      <!-- OTC Page -->
+      <div id="otc-page" class="page">
+        <header class="page-header"><p class="section-label">Medicines</p><h1><span class="gradient-text">OTC Medicine List</span></h1></header>
+        <div class="info-message"><span aria-hidden="true">ℹ️</span> These medicines are generally considered safe for over-the-counter purchase. Always consult a doctor or pharmacist if unsure.</div>
+        <div class="search-container"><input type="search" id="otc-search" class="search-input" placeholder="Search medicines…" onkeyup="searchOTC()" aria-label="Search OTC medicines" /></div>
+        <div id="otc-table" class="data-table" role="region" aria-label="OTC medicines list"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Voice Call Modal (fixed structure) -->
+  <div id="voice-call-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📞 Request a Call Back</h3>
+        <button class="modal-close" onclick="closeVoiceCallModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Our healthcare expert will call you back within 24 hours to discuss your medication questions.</p>
+        <div id="prescription-summary" class="prescription-summary" style="display: none;"></div>
+        <div class="form-group"><label for="call-name">Full Name *</label><input type="text" id="call-name" class="form-input" placeholder="Enter your full name" required /></div>
+        <div class="form-group"><label for="call-phone">Phone Number *</label><input type="tel" id="call-phone" class="form-input" placeholder="Enter your phone number" required /></div>
+        <div class="form-group"><label for="call-message">Additional Notes (Optional)</label><textarea id="call-message" class="form-textarea" rows="3" placeholder="Any specific questions or concerns?"></textarea></div>
+        <button class="request-call-btn" onclick="submitCallRequest()"><span>Request Call Back</span><span aria-hidden="true">📞</span></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
